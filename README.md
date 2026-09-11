@@ -26,7 +26,7 @@ Telegram Trigger → Switch (text / voice / fallback) → Gemini transcription f
 
 ## Run it yourself
 1. Import both JSON files into n8n (⋯ → Import from File).
-2. Add credentials: Telegram bot token, Google Gemini API key, Google Calendar OAuth2, Google Sheets OAuth2.
+2. Add credentials: Telegram bot token, Google Gemini API key, Groq API key,  Google Calendar OAuth2, Google Sheets OAuth2.
 3. Create a Google Sheet `Bookings` with columns `date, time, name, chat_id, service, status`.
 4. Edit the System Message with your business name, services and hours.
 5. Publish both workflows.
