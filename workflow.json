@@ -1,0 +1,904 @@
+{
+  "name": "Telegram AI Receptionist for Clinics & Salons",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -496,
+        -128
+      ],
+      "id": "2f60c51b-23b6-4a7a-8e47-42829d54c7e2",
+      "name": "Telegram Trigger",
+      "webhookId": "e181947c-c966-4209-b81f-a83c76b72da4",
+      "credentials": {
+        "telegramApi": {
+          "id": "HSNQKGXUK6R1K1M7",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}-v2"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        768,
+        16
+      ],
+      "id": "3d409e78-808b-47ab-bba3-0efb357f1f44",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "oladele7532@gmail.com",
+          "mode": "list",
+          "cachedResultName": "oladele7532@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "description": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        976,
+        64
+      ],
+      "id": "1b747e78-c774-40f4-a196-cf30ee83324d",
+      "name": "Book Appointment",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "QkAsSCukhgO9ozWM",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "oladele7532@gmail.com",
+          "mode": "list",
+          "cachedResultName": "oladele7532@gmail.com"
+        },
+        "returnAll": true,
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1104,
+        -16
+      ],
+      "id": "492276bf-fc17-4042-969a-65620e3a37a3",
+      "name": "Check Availability",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "QkAsSCukhgO9ozWM",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "oladele7532@gmail.com",
+          "mode": "list",
+          "cachedResultName": "oladele7532@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "updateFields": {
+          "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+          "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        848,
+        176
+      ],
+      "id": "7b649a9a-5530-45a4-8469-a68ef765795a",
+      "name": "Reschedule",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "QkAsSCukhgO9ozWM",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1xOln-yA0_p-c8a87XdfTYnAQaqqBSZqTBI6-N_O0XMQ",
+          "mode": "list",
+          "cachedResultName": "Bookings",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xOln-yA0_p-c8a87XdfTYnAQaqqBSZqTBI6-N_O0XMQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xOln-yA0_p-c8a87XdfTYnAQaqqBSZqTBI6-N_O0XMQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "booked",
+            "chat_id": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+            "date": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('date', ``, 'string') }}",
+            "time": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('time', ``, 'string') }}",
+            "name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('name', ``, 'string') }}",
+            "service": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('service', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "time",
+              "displayName": "time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "service",
+              "displayName": "service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        1152,
+        -176
+      ],
+      "id": "544918e0-f0a0-4462-bb08-29e5e21379de",
+      "name": "Log Booking",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HcLoIWCSFbqWPEuS",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0f3fd527-a547-45bb-966d-03941f30122f",
+                    "leftValue": "={{ $json.message.voice ? 'voice' : ($json.message.text ? 'text' : 'other') }}",
+                    "rightValue": "text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "b9784e6c-650a-4494-a3bf-4a35dc8ffa5b",
+                    "leftValue": "={{ $json.message.voice ? 'voice' : ($json.message.text ? 'text' : 'other') }}",
+                    "rightValue": "voice",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "voice"
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -192,
+        -144
+      ],
+      "id": "f1502840-3810-41a0-8663-39cb95cdb9ba",
+      "name": "Route: Text / Voice"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1eb1925-a163-486a-89cf-849fc6c150d5",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        16,
+        -352
+      ],
+      "id": "2d1ea636-c122-418c-bcb6-a1d5dc75dc87",
+      "name": "Set Text (typed)"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        32,
+        -144
+      ],
+      "id": "89b722fb-f02b-4bcb-b6b7-96c5cce60367",
+      "name": "Download Voice Note",
+      "webhookId": "4333a544-e16e-4b64-8a4f-5c04cba35dba",
+      "credentials": {
+        "telegramApi": {
+          "id": "HSNQKGXUK6R1K1M7",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cf273ee4-1b0d-4675-be6d-cd06d75e6b3c",
+              "name": "text",
+              "value": "={{ $json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        480,
+        -144
+      ],
+      "id": "79473f1b-ac09-441e-9bef-cd60164130b9",
+      "name": "Set Text (transcribed)"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Please send text or a voice note.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        32,
+        80
+      ],
+      "id": "52df05d1-8b76-4e5a-ab82-2ae184f5c01f",
+      "name": "Reply: Unsupported Message",
+      "webhookId": "619c3f19-6090-42da-84dc-8ae0391963e1",
+      "credentials": {
+        "telegramApi": {
+          "id": "HSNQKGXUK6R1K1M7",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "Today's date and time is {{ $now.toFormat('cccc d LLLL yyyy, HH:mm') }} (Africa/Lagos). Compute all dates from this.\nYou are the front-desk assistant for Lekki Smile Clinic. Services: Dental check-up (₦15,000, 30 min), Teeth cleaning (₦25,000, 45 min), Whitening (₦60,000, 60 min). Open Mon–Sat 9:00–17:00. Always call check_availability before offering a time. Confirm name, service, date and time, then call book_appointment and log_booking. If you cannot resolve the request in 2 attempts, reply exactly: HANDOFF: <one-line summary of what the customer wants>. Plain text only. No asterisks, no bullet symbols, no Markdown.",
+          "maxIterations": 6
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        752,
+        -352
+      ],
+      "id": "4205977c-5cdd-45a3-9830-660077671d80",
+      "name": "Receptionist Agent"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e23c5ba8-aa79-4601-954c-8408c0c9899d",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "HANDOFF",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1120,
+        -352
+      ],
+      "id": "d7be2797-6a19-47e6-b9db-308a7ad7f893",
+      "name": "Needs Human?"
+    },
+    {
+      "parameters": {
+        "chatId": "747773774",
+        "text": "=Customer needs help: {{ $json.output }}",
+        "additionalFields": {
+          "reply_to_message_id": {}
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        -448
+      ],
+      "id": "a5971751-97f8-4530-b3f7-18e5582c1078",
+      "name": "Alert Owner",
+      "webhookId": "f0c9cd7e-7962-4f34-b51c-a01eb2e11e11",
+      "credentials": {
+        "telegramApi": {
+          "id": "HSNQKGXUK6R1K1M7",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        -256
+      ],
+      "id": "f0b5ec39-3590-4f8f-98f1-c7d18e10d7b4",
+      "name": "Reply to Customer",
+      "webhookId": "44d2aed2-7923-4e35-a04f-a3236f642f00",
+      "credentials": {
+        "telegramApi": {
+          "id": "HSNQKGXUK6R1K1M7",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -480,
+        736
+      ],
+      "id": "b4f9409f-7dde-4562-8a1e-cd5e8862ef4f",
+      "name": "Every Hour"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "oladele7532@gmail.com",
+          "mode": "list",
+          "cachedResultName": "oladele7532@gmail.com"
+        },
+        "returnAll": true,
+        "timeMin": "={{ $now.toISO() }}",
+        "timeMax": "={{ $now.plus(24,'hours').toISO() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        -256,
+        736
+      ],
+      "id": "5eef97f5-f133-4259-b828-8aa4d9de4e08",
+      "name": "Appointments in Next 24h",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "QkAsSCukhgO9ozWM",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.description }}",
+        "text": "=Reminder: your {{ $json.summary }} is tomorrow at {{ $json.start.dateTime.slice(11,16) }}.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        720
+      ],
+      "id": "cd61d325-c790-4004-86d7-38bc241575e0",
+      "name": "Send Reminder",
+      "webhookId": "4fc23fcb-55a3-4994-a9e0-4450857cd765",
+      "credentials": {
+        "telegramApi": {
+          "id": "HSNQKGXUK6R1K1M7",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "RECEPTIONIST BOT"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -528,
+        -480
+      ],
+      "typeVersion": 1,
+      "id": "d4564298-5ada-44c7-ab5e-18b92e8f053e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "REMINDERS"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -528,
+        464
+      ],
+      "typeVersion": 1,
+      "id": "ca031b96-cc69-4e45-a86c-2da14ef7c1f3",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c8a54b6a-6142-47c1-bc6d-02f1bf4a60d6",
+              "leftValue": "={{ $json.description }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -32,
+        736
+      ],
+      "id": "eb2ffa65-4b5b-40f2-9b83-5182c2dc9322",
+      "name": "Customer Chat ID"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3.6-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3.6-flash"
+        },
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        256,
+        -144
+      ],
+      "id": "f0cd9d68-8b3c-4a22-9ee4-bb2e4f4b59a0",
+      "name": "Transcribe (Gemini)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "FIvr2DwZaldvptbu",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        592,
+        64
+      ],
+      "id": "dffa3aaa-b156-48e2-8b22-96ee149775bd",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "s8PowXX8YiBk1NAa",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Route: Text / Voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Receptionist Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Book Appointment": {
+      "ai_tool": [
+        [
+          {
+            "node": "Receptionist Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Availability": {
+      "ai_tool": [
+        [
+          {
+            "node": "Receptionist Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reschedule": {
+      "ai_tool": [
+        [
+          {
+            "node": "Receptionist Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Booking": {
+      "ai_tool": [
+        [
+          {
+            "node": "Receptionist Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route: Text / Voice": {
+      "main": [
+        [
+          {
+            "node": "Set Text (typed)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download Voice Note",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reply: Unsupported Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Text (typed)": {
+      "main": [
+        [
+          {
+            "node": "Receptionist Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Voice Note": {
+      "main": [
+        [
+          {
+            "node": "Transcribe (Gemini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Text (transcribed)": {
+      "main": [
+        [
+          {
+            "node": "Receptionist Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Receptionist Agent": {
+      "main": [
+        [
+          {
+            "node": "Needs Human?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs Human?": {
+      "main": [
+        [
+          {
+            "node": "Alert Owner",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reply to Customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every Hour": {
+      "main": [
+        [
+          {
+            "node": "Appointments in Next 24h",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Appointments in Next 24h": {
+      "main": [
+        [
+          {
+            "node": "Customer Chat ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Chat ID": {
+      "main": [
+        [
+          {
+            "node": "Send Reminder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe (Gemini)": {
+      "main": [
+        [
+          {
+            "node": "Set Text (transcribed)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Receptionist Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "5a3d5e66-8bf5-47f9-8e14-b80bf2d3efba",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "437590056d8113d67e6c37174bffca8962132367397539e743d61d4cc62ecb44"
+  },
+  "nodeGroups": [],
+  "id": "DSnlBle4Kg81wFHJ",
+  "tags": []
+}
